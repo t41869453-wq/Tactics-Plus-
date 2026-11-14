@@ -71,6 +71,29 @@
             font-weight: bold;
             font-size: 16px;
         }
+        /* تصميم جدول الترتيب */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        td:nth-child(2) {
+            text-align: right;
+            padding-right: 10px;
+        }
+        th:nth-child(2) {
+            text-align: right;
+            padding-right: 10px;
+        }
         .news-title {
             font-size: 15px;
             font-weight: bold;
@@ -110,6 +133,40 @@
         <div class="team">نيوكاسل</div>
     </div>
 
+    <div class="section-title">ترتيب الدوري (أبرز الفرق)</div>
+    <div class="card" style="padding: 5px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>المركز</th>
+                    <th>الفريق</th>
+                    <th>لعب</th>
+                    <th>نقاط</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>ليفربول</td>
+                    <td>25</td>
+                    <td><b>60</b></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>ارسنال</td>
+                    <td>25</td>
+                    <td><b>55</b></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>مانشستر سيتي</td>
+                    <td>25</td>
+                    <td><b>53</b></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="section-title">آخر الأخبار الرياضية</div>
 
     <div class="card">
@@ -117,14 +174,9 @@
         <div class="news-desc">تعرف على أبرز التشكيلات المتوقعة والتحليلات التكتيكية لأهم مواجهات الأسبوع في الدوريات الكبرى.</div>
     </div>
 
-    <div class="card">
-        <div class="news-title">تحديثات سوق الانتقالات الصيفية</div>
-        <div class="news-desc">تابع أحدث الأخبار والشائعات حول أبرز صفقة صفقات اللاعبين وأسعار الانتقالات.</div>
-    </div>
-
     <footer>
         جميع الحقوق محفوظة &copy; 2026 تكتيكس بلس
     </footer>
 
 </body>
-</html>
+                    </html>
