@@ -3,82 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تكتيك بلس - Tactic Plus</title>
+    <title>تكتيكس بلس | Tactics Plus</title>
     <style>
         :root {
-            --primary-color: #0f172a;
-            --accent-color: #22c55e;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #334155;
+            --primary-color: #10b981;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
         }
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
         }
         header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 20px;
         }
         header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--accent-color);
+            color: var(--primary-color);
+            font-size: 26px;
+            margin-bottom: 5px;
         }
-        .container {
-            padding: 1rem;
-            max-width: 600px;
-            margin: auto;
+        header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .section-title {
+            font-size: 18px;
+            margin: 20px 0 10px;
+            color: var(--primary-color);
+            border-right: 4px solid var(--primary-color);
+            padding-right: 8px;
         }
         .card {
-            background: var(--card-bg);
+            background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-right: 4px solid var(--accent-color);
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
-        .card h3 {
-            margin-top: 0;
-            color: var(--primary-color);
+        .match-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
         }
-        .badge {
-            background-color: #dcfce7;
-            color: #15803d;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin-bottom: 0.5rem;
+        .team {
+            flex: 1;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .match-score {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .news-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .news-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>تكتيك بلس | Tactic Plus</h1>
-        <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: #cbd5e1;">بوابتك لتحليل كرة القدم والإحصائيات</p>
+        <h1>⚽ تكتيكس بلس</h1>
+        <p>وجهتك الأولى لنتائج المباريات وأخبار كرة القدم</p>
     </header>
 
-    <div class="container">
-        <div class="card">
-            <span class="badge">مباشر ومحدث</span>
-            <h3>مُباريات اليوم والتكتيكات</h3>
-            <p>جارٍ ربط واجهة البيانات لجلب أحدث التشكيلات، التقييمات، وإحصائيات الدوريات الكبرى مباشرة..</p>
-        </div>
-
-        <div class="card">
-            <span class="badge">آخر الأخبار</span>
-            <h3>تحليلات واختيارات تكتيك بلس</h3>
-            <p>ترقّقب أحدث المقالات التحليلية، خطط اللعب، وتوقعات المباريات الحصرية.</p>
-        </div>
+    <div class="section-title">المباريات الحالية والنتائج</div>
+    
+    <div class="card match-card">
+        <div class="team">برشلونة</div>
+        <div class="match-score">2 - 1</div>
+        <div class="team">ريال مدريد</div>
     </div>
 
+    <div class="card match-card">
+        <div class="team">ليفربول</div>
+        <div class="match-score">3 - 0</div>
+        <div class="team">نيوكاسل</div>
+    </div>
+
+    <div class="section-title">آخر الأخبار الرياضية</div>
+
+    <div class="card">
+        <div class="news-title">استعدادات قوية لمباريات الجولة القادمة</div>
+        <div class="news-desc">تعرف على أبرز التشكيلات المتوقعة والتحليلات التكتيكية لأهم مواجهات الأسبوع في الدوريات الكبرى.</div>
+    </div>
+
+    <div class="card">
+        <div class="news-title">تحديثات سوق الانتقالات الصيفية</div>
+        <div class="news-desc">تابع أحدث الأخبار والشائعات حول أبرز صفقة صفقات اللاعبين وأسعار الانتقالات.</div>
+    </div>
+
+    <footer>
+        جميع الحقوق محفوظة &copy; 2026 تكتيكس بلس
+    </footer>
+
 </body>
-  </html>
+</html>
