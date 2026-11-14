@@ -21,34 +21,33 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding: 15px;
+            padding: 15px 15px 80px 15px; /* مسافة إضافية في الأسفل لشريط التنقل */
         }
         header {
             text-align: center;
-            padding: 20px 0;
+            padding: 15px 0;
             border-bottom: 2px solid var(--primary-color);
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .app-logo {
-            width: 65px;
-            height: 65px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, #10b981, #047857);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 30px;
             box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
             border: 2px solid #34d399;
         }
         header h1 {
             color: var(--primary-color);
-            font-size: 26px;
-            margin-bottom: 2px;
+            font-size: 24px;
         }
         header p {
             color: var(--text-secondary);
@@ -56,7 +55,7 @@
         }
         .section-title {
             font-size: 18px;
-            margin: 20px 0 10px;
+            margin: 10px 0 15px;
             color: var(--primary-color);
             border-right: 4px solid var(--primary-color);
             padding-right: 8px;
@@ -114,12 +113,51 @@
             font-size: 13px;
             color: var(--text-secondary);
         }
-        footer {
-            text-align: center;
-            padding: 20px;
+        /* إخفاء وإظهار الأقسام */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #1e293b;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #334155;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
             color: var(--text-secondary);
-            font-size: 12px;
-            margin-top: 30px;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: color 0.2s;
+            flex: 1;
+        }
+        .nav-btn span.icon {
+            font-size: 20px;
+        }
+        .nav-btn.active {
+            color: var(--primary-color);
+            font-weight: bold;
         }
     </style>
 </head>
@@ -133,64 +171,106 @@
         </div>
     </header>
 
-    <div class="section-title">المباريات الحالية والنتائج</div>
-    
-    <div class="card match-card">
-        <div class="team">برشلونة</div>
-        <div class="match-score">2 - 1</div>
-        <div class="team">ريال مدريد</div>
+    <!-- قسم المباريات -->
+    <div id="matches" class="tab-content active">
+        <div class="section-title">المباريات الحالية والنتائج</div>
+        
+        <div class="card match-card">
+            <div class="team">برشلونة</div>
+            <div class="match-score">2 - 1</div>
+            <div class="team">ريال مدريد</div>
+        </div>
+
+        <div class="card match-card">
+            <div class="team">ليفربول</div>
+            <div class="match-score">3 - 0</div>
+            <div class="team">نيوكاسل</div>
+        </div>
     </div>
 
-    <div class="card match-card">
-        <div class="team">ليفربول</div>
-        <div class="match-score">3 - 0</div>
-        <div class="team">نيوكاسل</div>
+    <!-- قسم الترتيب -->
+    <div id="standings" class="tab-content">
+        <div class="section-title">ترتيب الدوري (أبرز الفرق)</div>
+        <div class="card" style="padding: 5px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>المركز</th>
+                        <th>الفريق</th>
+                        <th>لعب</th>
+                        <th>نقاط</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>ليفربول</td>
+                        <td>25</td>
+                        <td><b>60</b></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>ارسنال</td>
+                        <td>25</td>
+                        <td><b>55</b></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>مانشستر سيتي</td>
+                        <td>25</td>
+                        <td><b>53</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="section-title">ترتيب الدوري (أبرز الفرق)</div>
-    <div class="card" style="padding: 5px;">
-        <table>
-            <thead>
-                <tr>
-                    <th>المركز</th>
-                    <th>الفريق</th>
-                    <th>لعب</th>
-                    <th>نقاط</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>ليفربول</td>
-                    <td>25</td>
-                    <td><b>60</b></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>ارسنال</td>
-                    <td>25</td>
-                    <td><b>55</b></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>مانشستر سيتي</td>
-                    <td>25</td>
-                    <td><b>53</b></td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- قسم الأخبار -->
+    <div id="news" class="tab-content">
+        <div class="section-title">آخر الأخبار الرياضية</div>
+
+        <div class="card">
+            <div class="news-title">استعدادات قوية لمباريات الجولة القادمة</div>
+            <div class="news-desc">تعرف على أبرز التشكيلات المتوقعة والتحليلات التكتيكية لأهم مواجهات الأسبوع في الدوريات الكبرى.</div>
+        </div>
+
+        <div class="card">
+            <div class="news-title">تحديثات سوق الانتقالات</div>
+            <div class="news-desc">تابع أحدث الأخبار والشائعات حول أبرز صفقات اللاعبين وأسعار الانتقالات.</div>
+        </div>
     </div>
 
-    <div class="section-title">آخر الأخبار الرياضية</div>
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" onclick="openTab('matches', this)">
+            <span class="icon">⚽</span>
+            <span>المباريات</span>
+        </button>
+        <button class="nav-btn" onclick="openTab('standings', this)">
+            <span class="icon">🏆</span>
+            <span>الترتيب</span>
+        </button>
+        <button class="nav-btn" onclick="openTab('news', this)">
+            <span class="icon">📰</span>
+            <span>الأخبار</span>
+        </button>
+    </nav>
 
-    <div class="card">
-        <div class="news-title">استعدادات قوية لمباريات الجولة القادمة</div>
-        <div class="news-desc">تعرف على أبرز التشكيلات المتوقعة والتحليلات التكتيكية لأهم مواجهات الأسبوع في الدوريات الكبرى.</div>
-    </div>
-
-    <footer>
-        جميع الحقوق محفوظة &copy; 2026 تكتيكس بلس
-    </footer>
+    <script>
+        function openTab(tabId, btnElement) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // إزالة التفعيل من جميع الأزرار
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // إظهار القسم المختار وتفعيل الزر الخاص به
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+    </script>
 
 </body>
-            </html>
+    </html>
