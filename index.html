@@ -278,16 +278,16 @@
         })
         .catch(error => console.error('خطأ في الاتصال:', error));
     </script>
+    <script>
+      fetch('https://api.isportsapi.com/sport/football/livescores?api_key=Cy2zXdygU6MAVJa')
+        .then(response => response.json())
+        .then(data => {
+          console.log("تم السحب بنجاح:", data);
+        })
+        .catch(error => console.error('خطأ في الاتصال:', error));
+    </script>
+  </body>
+</html> 
+    </script>
   </body>
 </html>
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // إظهار القسم المختار وتفعيل الزر الخاص به
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
-        }
-    </script>
-
-</body>
-    </html>
