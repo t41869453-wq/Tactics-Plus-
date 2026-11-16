@@ -262,7 +262,24 @@
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            // إزالة التفعيل من جميع الأزرار
+            // إزالة التفعيل من جميع الأزرار    <!-- الدوال القديمة -->
+    <script>
+      function openTab(tabId, btnElement) {
+        // كودك القديم هنا
+      }
+    </script>
+
+    <!-- حط الكود الجديد بتاعنا هنا في الآخر خالص -->
+    <script>
+      fetch('https://api.isportsapi.com/sport/football/livescores?api_key=Cy2zXdygU6MAVJa')
+        .then(response => response.json())
+        .then(data => {
+          console.log("تم سحب المباريات بنجاح:", data);
+        })
+        .catch(error => console.error('خطأ في الاتصال:', error));
+    </script>
+  </body>
+</html>
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
