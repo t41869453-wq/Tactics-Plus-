@@ -10,6 +10,7 @@
             font-family: 'Cairo', sans-serif;
             background-color: #0f172a;
             color: #ffffff;
+            padding-bottom: 70px;
         }
         .header {
             text-align: center;
@@ -34,6 +35,7 @@
             justify-content: space-around;
             padding: 10px 0;
             border-top: 1px solid #334155;
+            z-index: 100;
         }
         .nav-btn {
             background: none;
@@ -51,9 +53,41 @@
         .match-card {
             background-color: #1e293b;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-radius: 10px;
+            border: 1px solid #334155;
+        }
+        .league-name {
+            font-size: 12px;
+            color: #10b981;
+            margin-bottom: 8px;
             text-align: center;
+        }
+        .teams-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .team {
+            width: 38%;
+            text-align: center;
+        }
+        .score-box {
+            width: 24%;
+            text-align: center;
+            background-color: #0f172a;
+            padding: 6px 10px;
+            border-radius: 8px;
+            color: #10b981;
+            font-size: 16px;
+        }
+        .match-status {
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
         }
     </style>
 </head>
@@ -68,7 +102,7 @@
     <div id="matches" class="tab-content active">
         <h3>المباريات الحية والنتائج</h3>
         <div id="matches-container">
-            <div class="match-card">
+            <div class="match-card" style="text-align: center;">
                 <p>جاري تحميل المباريات الحية...</p>
             </div>
         </div>
@@ -102,29 +136,65 @@
         </button>
     </nav>
 
-    <!-- سكربت التحكم والـ API -->
+    <!-- سكربت التحكم وعرض المباريات -->
     <script>
         function openTab(tabId, btnElement) {
-            // إخفاء جميع الأقسام
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            // إزالة التفعيل من جميع الأزرار
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            // إظهار القسم المختصر وتفعيل الزر الخاص به
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
         }
 
-        // سحب بيانات المباريات الحية باستخدام المفتاح الخاص بك
+        // جلب وعرض المباريات الحية
+        const container = document.getElementById('matches-container');
+
         fetch('https://api.isportsapi.com/sport/football/livescores?api_key=Cy2zXdygU6MAVJa')
             .then(response => response.json())
-            .then(data => {
-                console.log("تم سحب بيانات المباريات بنجاح:", data);
+            .then(result => {
+                // التحقق من نجاح الطلب ووجود مباريات
+                if (result.code === 0 && result.data && result.data.length > 0) {
+                    container.innerHTML = ''; // مسح رسالة التحميل
+
+                    result.data.forEach(match => {
+                        const homeTeam = match.homeName || 'الفريق الأول';
+                        const awayTeam = match.awayName || 'الفريق الثاني';
+                        const homeScore = match.homeScore !== undefined ? match.homeScore : '-';
+                        const awayScore = match.awayScore !== undefined ? match.awayScore : '-';
+                        const league = match.leagueName || 'مباراة كرة قدم';
+
+                        const card = document.createElement('div');
+                        card.className = 'match-card';
+                        card.innerHTML = `
+                            <div class="league-name">${league}</div>
+                            <div class="teams-row">
+                                <div class="team">${homeTeam}</div>
+                                <div class="score-box">${homeScore} - ${awayScore}</div>
+                                <div class="team">${awayTeam}</div>
+                            </div>
+                            <div class="match-status">مباشر / جارية</div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = `
+                        <div class="match-card" style="text-align: center;">
+                            <p>لا توجد مباريات حية في الوقت الحالي، أو تحقق من صلاحية الباقة في حساب iSports.</p>
+                        </div>
+                    `;
+                }
             })
-            .catch(error => console.error('خطأ في الاتصال:', error));
+            .catch(error => {
+                console.error('خطأ في الاتصال:', error);
+                container.innerHTML = `
+                    <div class="match-card" style="text-align: center; color: #f87171;">
+                        <p>تعذر الاتصال بالسيرفر لعرض المباريات. تأكد من الاتصال بالإنترنت.</p>
+                    </div>
+                `;
+            });
     </script>
 </body>
-    </html>
+        </html>
