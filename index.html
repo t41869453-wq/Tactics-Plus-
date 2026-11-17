@@ -87,9 +87,24 @@
         .match-status {
             text-align: center;
             font-size: 12px;
-            color: #f87171;
+            color: #94a3b8;
             margin-top: 6px;
+        }
+        .live-badge {
+            color: #f87171;
             font-weight: bold;
+        }
+        .refresh-btn {
+            background-color: #10b981;
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: block;
+            width: 100%;
         }
     </style>
 </head>
@@ -102,9 +117,12 @@
 
     <!-- قسم المباريات -->
     <div id="matches" class="tab-content active">
+        <button class="refresh-btn" onclick="fetchRealMatches()">🔄 تحديث المباريات الآن</button>
         <h3>مباريات اليوم والنتائج الحية</h3>
         <div id="matches-container">
-            <!-- سيتم تعبئة المباريات هنا برمجياً -->
+            <div class="match-card" style="text-align: center;">
+                <p>جاري الاتصال بسيرفر المباريات الحقيقية...</p>
+            </div>
         </div>
     </div>
 
@@ -140,7 +158,7 @@
         </button>
     </nav>
 
-    <!-- سكربت التحكم وعرض النتائج -->
+    <!-- سكربت الربط الحقيقي بالـ API -->
     <script>
         function openTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -153,34 +171,94 @@
             btnElement.classList.add('active');
         }
 
-        // قائمة المباريات المعروضة (يمكن ربطها بالـ API لاحقاً أو تحديثها)
-        const matchesData = [
-            { league: "دوري أبطال أوروبا", home: "ريال مدريد", away: "مانشستر سيتي", score: "2 - 1", status: "الشوط الثاني 75'" },
-            { league: "الدوري الإنجليزي الممتاز", home: "ليفربول", away: "برشلونة", score: "1 - 1", status: "مباشر 60'" },
-            { league: "الدوري المصري الممتاز", home: "الأهلي", away: "الزمالك", score: "0 - 0", status: "جارٍ الإحماء" }
-        ];
-
+        const apiKey = 'Cy2zXdygU6MAVJa';
         const container = document.getElementById('matches-container');
 
-        function renderMatches() {
-            container.innerHTML = '';
-            matchesData.forEach(match => {
-                const card = document.createElement('div');
-                card.className = 'match-card';
-                card.innerHTML = `
-                    <div class="league-name">${match.league}</div>
-                    <div class="teams-row">
-                        <div class="team">${match.home}</div>
-                        <div class="score-box">${match.score}</div>
-                        <div class="team">${match.away}</div>
-                    </div>
-                    <div class="match-status">🔴 ${match.status}</div>
-                `;
-                container.appendChild(card);
-            });
+        // دالة ترجمة حالة المباراة من أكواد iSports
+        function getMatchStatus(status) {
+            switch(status) {
+                case 0: return 'لم تبدأ بعد';
+                case 1: return '<span class="live-badge">🔴 الشوط الأول</span>';
+                case 2: return '<span class="live-badge">⏸ استراحة</span>';
+                case 3: return '<span class="live-badge">🔴 الشوط الثاني</span>';
+                case 4: return '<span class="live-badge">🔴 أشواط إضافية</span>';
+                case 5: return '<span class="live-badge">🔴 ركلات ترجيح</span>';
+                case -1: return 'انتهت';
+                case -10: return 'ملغاة';
+                case -11: return 'مؤجلة';
+                default: return 'اليوم';
+            }
         }
 
-        renderMatches();
+        function fetchRealMatches() {
+            container.innerHTML = `
+                <div class="match-card" style="text-align: center;">
+                    <p>جاري جلب أحدث النتائج من iSports...</p>
+                </div>
+            `;
+
+            // رابط جدول مباريات اليوم والنتائج الحية
+            const targetUrl = `https://api.isportsapi.com/sport/football/schedule/basic?api_key=${apiKey}`;
+            // استخدام وسيط corsproxy لتمرير الطلب بدون حظر المتصفح
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+
+            fetch(proxyUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('فشل الاتصال بالوسيط');
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.code === 0 && result.data && result.data.length > 0) {
+                        container.innerHTML = '';
+
+                        // عرض أول 40 مباراة لسرعة الأداء
+                        result.data.slice(0, 40).forEach(match => {
+                            const homeTeam = match.homeName || 'الفريق الأول';
+                            const awayTeam = match.awayName || 'الفريق الثاني';
+                            const homeScore = (match.status !== 0 && match.homeScore !== undefined) ? match.homeScore : '-';
+                            const awayScore = (match.status !== 0 && match.awayScore !== undefined) ? match.awayScore : '-';
+                            const league = match.leagueName || 'مباراة كرة قدم';
+                            const statusText = getMatchStatus(match.status);
+
+                            const card = document.createElement('div');
+                            card.className = 'match-card';
+                            card.innerHTML = `
+                                <div class="league-name">${league}</div>
+                                <div class="teams-row">
+                                    <div class="team">${homeTeam}</div>
+                                    <div class="score-box">${homeScore} - ${awayScore}</div>
+                                    <div class="team">${awayTeam}</div>
+                                </div>
+                                <div class="match-status">${statusText}</div>
+                            `;
+                            container.appendChild(card);
+                        });
+                    } else {
+                        // لو السيرفر رجع رسالة خطأ (مثل تفعيل الـ IP في لوحة iSports) هتظهر هنا
+                        const msg = result.message || 'لا توجد مباريات متاحة حالياً';
+                        container.innerHTML = `
+                            <div class="match-card" style="text-align: center; color: #fbbf24;">
+                                <p>رسالة من سيرفر iSports:</p>
+                                <p dir="ltr" style="font-size: 13px; background: #0f172a; padding: 8px; border-radius: 5px;">${msg}</p>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    container.innerHTML = `
+                        <div class="match-card" style="text-align: center; color: #f87171;">
+                            <p>تعذر جلب البيانات الحية حالياً. اضغط على زر التحديث بالأعلى للمحاولة مرة أخرى.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        // تشغيل الجلب فور فتح التطبيق
+        fetchRealMatches();
+
+        // تحديث تلقائي للنتائج كل 60 ثانية
+        setInterval(fetchRealMatches, 60000);
     </script>
 </body>
-            </html>
+    </html>
