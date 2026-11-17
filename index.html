@@ -1,28 +1,130 @@
-    <script>
-      // دالة التنقل بين أقسام التطبيق (المباريات، الترتيب، الأخبار)
-      function openTab(tabId, btnElement) {
-        // إخفاء جميع الأقسام
-        document.querySelectorAll('.tab-content').forEach(tab => {
-          tab.classList.remove('active');
-        });
-        // إزالة التفعيل من جميع الأزرار
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-          btn.classList.remove('active');
-        });
-        // إظهار القسم المختصر وتفعيل الزر الخاص به
-        document.getElementById(tabId).classList.add('active');
-        btnElement.classList.add('active');
-      }
-    </script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تكتيك بلس - Tactic Plus</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background-color: #1e293b;
+            border-bottom: 2px solid #10b981;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #1e293b;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #334155;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-btn.active {
+            color: #10b981;
+        }
+        .match-card {
+            background-color: #1e293b;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="header">
+        <h2>تكتيك بلس</h2>
+        <p>وجهتك الأولى لنتائج المباريات وأخبار كرة القدم</p>
+    </div>
+
+    <!-- قسم المباريات -->
+    <div id="matches" class="tab-content active">
+        <h3>المباريات الحية والنتائج</h3>
+        <div id="matches-container">
+            <div class="match-card">
+                <p>جاري تحميل المباريات الحية...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم الترتيب -->
+    <div id="standings" class="tab-content">
+        <h3>جدول الترتيب</h3>
+        <p>قريباً جداً جدول ترتيب الدوريات...</p>
+    </div>
+
+    <!-- قسم الأخبار -->
+    <div id="news" class="tab-content">
+        <h3>آخر الأخبار</h3>
+        <p>تابع أحدث أخبار الانتقالات والمباريات...</p>
+    </div>
+
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" onclick="openTab('matches', this)">
+            <span>⚽</span>
+            <span>المباريات</span>
+        </button>
+        <button class="nav-btn" onclick="openTab('standings', this)">
+            <span>🏆</span>
+            <span>الترتيب</span>
+        </button>
+        <button class="nav-btn" onclick="openTab('news', this)">
+            <span>📰</span>
+            <span>الأخبار</span>
+        </button>
+    </nav>
+
+    <!-- سكربت التحكم والـ API -->
     <script>
-      // كود سحب المباريات الحية باستخدام مفتاح الـ API الخاص بك
-      fetch('https://api.isportsapi.com/sport/football/livescores?api_key=Cy2zXdygU6MAVJa')
-        .then(response => response.json())
-        .then(data => {
-          console.log("تم سحب بيانات المباريات بنجاح:", data);
-        })
-        .catch(error => console.error('خطأ في الاتصال:', error));
+        function openTab(tabId, btnElement) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // إزالة التفعيل من جميع الأزرار
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // إظهار القسم المختصر وتفعيل الزر الخاص به
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // سحب بيانات المباريات الحية باستخدام المفتاح الخاص بك
+        fetch('https://api.isportsapi.com/sport/football/livescores?api_key=Cy2zXdygU6MAVJa')
+            .then(response => response.json())
+            .then(data => {
+                console.log("تم سحب بيانات المباريات بنجاح:", data);
+            })
+            .catch(error => console.error('خطأ في الاتصال:', error));
     </script>
-  </body>
-</html>
+</body>
+    </html>
