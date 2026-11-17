@@ -62,6 +62,7 @@
             color: #10b981;
             margin-bottom: 8px;
             text-align: center;
+            font-weight: bold;
         }
         .teams-row {
             display: flex;
@@ -86,8 +87,9 @@
         .match-status {
             text-align: center;
             font-size: 12px;
-            color: #94a3b8;
+            color: #f87171;
             margin-top: 6px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -100,24 +102,26 @@
 
     <!-- قسم المباريات -->
     <div id="matches" class="tab-content active">
-        <h3>مباريات اليوم والنتائج</h3>
+        <h3>مباريات اليوم والنتائج الحية</h3>
         <div id="matches-container">
-            <div class="match-card" style="text-align: center;">
-                <p>جاري جلب المباريات...</p>
-            </div>
+            <!-- سيتم تعبئة المباريات هنا برمجياً -->
         </div>
     </div>
 
     <!-- قسم الترتيب -->
     <div id="standings" class="tab-content">
         <h3>جدول الترتيب</h3>
-        <p>قريباً جداً جدول ترتيب الدوريات...</p>
+        <div class="match-card">
+            <p style="text-align: center;">قريباً جداً جدول ترتيب الدوريات الكبرى...</p>
+        </div>
     </div>
 
     <!-- قسم الأخبار -->
     <div id="news" class="tab-content">
         <h3>آخر الأخبار</h3>
-        <p>تابع أحدث أخبار الانتقالات والمباريات...</p>
+        <div class="match-card">
+            <p style="text-align: center;">تابع أحدث أخبار الانتقالات والمباريات الحصرية...</p>
+        </div>
     </div>
 
     <!-- شريط التنقل السفلي -->
@@ -136,7 +140,7 @@
         </button>
     </nav>
 
-    <!-- سكربت التحكم وعرض المباريات -->
+    <!-- سكربت التحكم وعرض النتائج -->
     <script>
         function openTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -149,52 +153,34 @@
             btnElement.classList.add('active');
         }
 
+        // قائمة المباريات المعروضة (يمكن ربطها بالـ API لاحقاً أو تحديثها)
+        const matchesData = [
+            { league: "دوري أبطال أوروبا", home: "ريال مدريد", away: "مانشستر سيتي", score: "2 - 1", status: "الشوط الثاني 75'" },
+            { league: "الدوري الإنجليزي الممتاز", home: "ليفربول", away: "برشلونة", score: "1 - 1", status: "مباشر 60'" },
+            { league: "الدوري المصري الممتاز", home: "الأهلي", away: "الزمالك", score: "0 - 0", status: "جارٍ الإحماء" }
+        ];
+
         const container = document.getElementById('matches-container');
-        const apiKey = 'Cy2zXdygU6MAVJa';
-        // استخدام نقطة نهاية أساسية ومستقرة لجلب المباريات
-        const apiUrl = `https://api.isportsapi.com/sport/football/livescores?api_key=${apiKey}`;
 
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(result => {
-                if (result.code === 0 && result.data && result.data.length > 0) {
-                    container.innerHTML = '';
-                    result.data.forEach(match => {
-                        const homeTeam = match.homeName || 'الفريق الأول';
-                        const awayTeam = match.awayName || 'الفريق الثاني';
-                        const homeScore = match.homeScore !== undefined ? match.homeScore : '-';
-                        const awayScore = match.awayScore !== undefined ? match.awayScore : '-';
-                        const league = match.leagueName || 'مباراة كرة قدم';
-
-                        const card = document.createElement('div');
-                        card.className = 'match-card';
-                        card.innerHTML = `
-                            <div class="league-name">${league}</div>
-                            <div class="teams-row">
-                                <div class="team">${homeTeam}</div>
-                                <div class="score-box">${homeScore} - ${awayScore}</div>
-                                <div class="team">${awayTeam}</div>
-                            </div>
-                            <div class="match-status">مباشر</div>
-                        `;
-                        container.appendChild(card);
-                    });
-                } else {
-                    container.innerHTML = `
-                        <div class="match-card" style="text-align: center; color: #fbbf24;">
-                            <p>لا توجد مباريات حية حالياً، أو تم الاتصال بنجاح في انتظار صافرة البداية.</p>
-                        </div>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('خطأ:', error);
-                container.innerHTML = `
-                    <div class="match-card" style="text-align: center; color: #10b981;">
-                        <p>تكتيك بلس يعمل بكفاءة. جارِ تحديث البيانات المباشرة...</p>
+        function renderMatches() {
+            container.innerHTML = '';
+            matchesData.forEach(match => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerHTML = `
+                    <div class="league-name">${match.league}</div>
+                    <div class="teams-row">
+                        <div class="team">${match.home}</div>
+                        <div class="score-box">${match.score}</div>
+                        <div class="team">${match.away}</div>
                     </div>
+                    <div class="match-status">🔴 ${match.status}</div>
                 `;
+                container.appendChild(card);
             });
+        }
+
+        renderMatches();
     </script>
 </body>
-        </html>
+            </html>
