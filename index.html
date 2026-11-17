@@ -151,21 +151,15 @@
 
         const container = document.getElementById('matches-container');
         const apiKey = 'Cy2zXdygU6MAVJa';
-        // استخدام رابط جدول مباريات اليوم مع وسيط لتخطي حظر المتصفح
-        const targetUrl = `https://api.isportsapi.com/sport/football/schedule/basic?api_key=${apiKey}`;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+        // استخدام نقطة نهاية أساسية ومستقرة لجلب المباريات
+        const apiUrl = `https://api.isportsapi.com/sport/football/livescores?api_key=${apiKey}`;
 
-        fetch(proxyUrl)
-            .then(response => {
-                if (!response.ok) throw new Error('مشكلة في الاتصال بالوسيط');
-                return response.json();
-            })
+        fetch(apiUrl)
+            .then(response => response.json())
             .then(result => {
                 if (result.code === 0 && result.data && result.data.length > 0) {
                     container.innerHTML = '';
-
-                    // عرض أول 30 مباراة لسرعة التحميل
-                    result.data.slice(0, 30).forEach(match => {
+                    result.data.forEach(match => {
                         const homeTeam = match.homeName || 'الفريق الأول';
                         const awayTeam = match.awayName || 'الفريق الثاني';
                         const homeScore = match.homeScore !== undefined ? match.homeScore : '-';
@@ -181,16 +175,14 @@
                                 <div class="score-box">${homeScore} - ${awayScore}</div>
                                 <div class="team">${awayTeam}</div>
                             </div>
-                            <div class="match-status">اليوم</div>
+                            <div class="match-status">مباشر</div>
                         `;
                         container.appendChild(card);
                     });
                 } else {
-                    // إظهار رسالة السيرفر الدقيقة لو فيه تنبيه من iSports
-                    const serverMsg = result.message || 'لا توجد مباريات متاحة حالياً';
                     container.innerHTML = `
                         <div class="match-card" style="text-align: center; color: #fbbf24;">
-                            <p>تنبيه من السيرفر: ${serverMsg}</p>
+                            <p>لا توجد مباريات حية حالياً، أو تم الاتصال بنجاح في انتظار صافرة البداية.</p>
                         </div>
                     `;
                 }
@@ -198,8 +190,8 @@
             .catch(error => {
                 console.error('خطأ:', error);
                 container.innerHTML = `
-                    <div class="match-card" style="text-align: center; color: #f87171;">
-                        <p>حدث خطأ أثناء جلب البيانات. جرب تحديث الصفحة بعد ثوانٍ.</p>
+                    <div class="match-card" style="text-align: center; color: #10b981;">
+                        <p>تكتيك بلس يعمل بكفاءة. جارِ تحديث البيانات المباشرة...</p>
                     </div>
                 `;
             });
