@@ -100,10 +100,10 @@
 
     <!-- قسم المباريات -->
     <div id="matches" class="tab-content active">
-        <h3>المباريات الحية والنتائج</h3>
+        <h3>مباريات اليوم والنتائج</h3>
         <div id="matches-container">
             <div class="match-card" style="text-align: center;">
-                <p>جاري تحميل المباريات الحية...</p>
+                <p>جاري جلب المباريات...</p>
             </div>
         </div>
     </div>
@@ -149,17 +149,23 @@
             btnElement.classList.add('active');
         }
 
-        // جلب وعرض المباريات الحية
         const container = document.getElementById('matches-container');
+        const apiKey = 'Cy2zXdygU6MAVJa';
+        // استخدام رابط جدول مباريات اليوم مع وسيط لتخطي حظر المتصفح
+        const targetUrl = `https://api.isportsapi.com/sport/football/schedule/basic?api_key=${apiKey}`;
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
-        fetch('https://api.isportsapi.com/sport/football/livescores?api_key=Cy2zXdygU6MAVJa')
-            .then(response => response.json())
+        fetch(proxyUrl)
+            .then(response => {
+                if (!response.ok) throw new Error('مشكلة في الاتصال بالوسيط');
+                return response.json();
+            })
             .then(result => {
-                // التحقق من نجاح الطلب ووجود مباريات
                 if (result.code === 0 && result.data && result.data.length > 0) {
-                    container.innerHTML = ''; // مسح رسالة التحميل
+                    container.innerHTML = '';
 
-                    result.data.forEach(match => {
+                    // عرض أول 30 مباراة لسرعة التحميل
+                    result.data.slice(0, 30).forEach(match => {
                         const homeTeam = match.homeName || 'الفريق الأول';
                         const awayTeam = match.awayName || 'الفريق الثاني';
                         const homeScore = match.homeScore !== undefined ? match.homeScore : '-';
@@ -175,23 +181,25 @@
                                 <div class="score-box">${homeScore} - ${awayScore}</div>
                                 <div class="team">${awayTeam}</div>
                             </div>
-                            <div class="match-status">مباشر / جارية</div>
+                            <div class="match-status">اليوم</div>
                         `;
                         container.appendChild(card);
                     });
                 } else {
+                    // إظهار رسالة السيرفر الدقيقة لو فيه تنبيه من iSports
+                    const serverMsg = result.message || 'لا توجد مباريات متاحة حالياً';
                     container.innerHTML = `
-                        <div class="match-card" style="text-align: center;">
-                            <p>لا توجد مباريات حية في الوقت الحالي، أو تحقق من صلاحية الباقة في حساب iSports.</p>
+                        <div class="match-card" style="text-align: center; color: #fbbf24;">
+                            <p>تنبيه من السيرفر: ${serverMsg}</p>
                         </div>
                     `;
                 }
             })
             .catch(error => {
-                console.error('خطأ في الاتصال:', error);
+                console.error('خطأ:', error);
                 container.innerHTML = `
                     <div class="match-card" style="text-align: center; color: #f87171;">
-                        <p>تعذر الاتصال بالسيرفر لعرض المباريات. تأكد من الاتصال بالإنترنت.</p>
+                        <p>حدث خطأ أثناء جلب البيانات. جرب تحديث الصفحة بعد ثوانٍ.</p>
                     </div>
                 `;
             });
